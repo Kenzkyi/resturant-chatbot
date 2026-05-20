@@ -3,7 +3,7 @@ import ChatBot from "./components/ChatBot";
 
 export default function Home() {
   return (
-    <Suspense>
+    <Suspense fallback={<div>Loading...</div>}>
       <ChatBot />
     </Suspense>
   );
