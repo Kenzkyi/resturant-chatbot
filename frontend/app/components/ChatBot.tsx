@@ -137,7 +137,9 @@ export default function ChatBot() {
             >
               {renderMessageText(msg.text)}
             </div>
-            <span className="text-[10px] text-slate-500 mt-1 px-1">{msg.time}</span>
+            <span className="text-[10px] text-slate-500 mt-1 px-1">
+              {msg.time}
+            </span>
           </div>
         ))}
         <div ref={messagesEndRef} />
@@ -147,7 +149,9 @@ export default function ChatBot() {
       <footer className="p-4 bg-slate-900 border-t border-slate-800">
         {isLoading && (
           <div className="flex items-center space-x-2 pb-3 px-2">
-            <span className="text-xs text-slate-400 font-medium">BiteBot is thinking</span>
+            <span className="text-xs text-slate-400 font-medium">
+              BiteBot is thinking
+            </span>
             <div className="flex space-x-1">
               <div className="w-1.5 h-1.5 bg-orange-500 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
               <div className="w-1.5 h-1.5 bg-orange-500 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
@@ -162,7 +166,9 @@ export default function ChatBot() {
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             disabled={isLoading}
-            placeholder={isLoading ? "Waiting for response..." : "Type an option number..."}
+            placeholder={
+              isLoading ? "Waiting for response..." : "Type an option number..."
+            }
             className="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500 disabled:opacity-50 text-slate-200 transition-colors"
           />
           <button

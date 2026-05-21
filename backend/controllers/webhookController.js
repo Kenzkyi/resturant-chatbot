@@ -16,7 +16,6 @@ const handlePaystackWebhook = async (req, res) => {
 
   try {
     const { event, data } = JSON.parse(req.body);
-    console.log(event, data);
 
     if (event === "charge.success") {
       const orderId = data.reference.replace("order_", "");
@@ -26,11 +25,14 @@ const handlePaystackWebhook = async (req, res) => {
         return res.sendStatus(200);
       }
 
-      await order.update({ status: "paid" });
+      if (order.status !== "paid") {
+        await order.update({ status: "paid" });
+      }
 
       const session = await Session.findOne({
         where: { deviceId: order.deviceId },
       });
+
       if (session) {
         await session.update({ currentOption: "MAIN_MENU" });
       }
