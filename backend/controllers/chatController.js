@@ -2,6 +2,7 @@ const { handleMainMenu } = require("../handlers/mainMenu");
 const { handleSelectingItems } = require("../handlers/selectingItems");
 const { MAIN_MENU_TEXT } = require("../utils");
 const { verifyTransaction } = require("../services/paystackService");
+const Order = require("../config/order");
 
 const handleChatMessage = async (req, res) => {
   const { message } = req.body;
@@ -24,7 +25,8 @@ const handleChatMessage = async (req, res) => {
         break;
       default:
         await session.update({ currentOption: "MAIN_MENU" });
-        responseText = "Session reset. How can we help you today?\n\n" + MAIN_MENU_TEXT;
+        responseText =
+          "Session reset. How can we help you today?\n\n" + MAIN_MENU_TEXT;
         break;
     }
 
@@ -47,15 +49,28 @@ const resetSession = async (req, res) => {
 
 const verifyPayment = async (req, res) => {
   const { reference } = req.params;
-  const cleanReference = reference && typeof reference === "string" ? reference.trim() : "";
+  const cleanReference =
+    reference && typeof reference === "string" ? reference.trim() : "";
 
   if (!cleanReference) {
     return res.status(400).json({ error: "Invalid reference" });
   }
 
   try {
+    const orderId = cleanReference.replace("order_", "");
+    const order = await Order.findByPk(orderId);
+
+    if (!order) {
+      return res.status(404).json({ error: "Order not found" });
+    }
+
+    if (order.status === "paid") {
+      return res.status(200).json({ message: "Payment already verified" });
+    }
+
     const data = await verifyTransaction(cleanReference);
     if (data.status === "success") {
+      await order.update({ status: "paid" });
       return res.status(200).json({ message: "Payment verified successfully" });
     }
     return res.status(400).json({ error: "Payment verification failed" });
