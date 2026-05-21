@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
 import { useChat } from "../hooks/useChat";
 import Loading from "./Loading";
@@ -35,7 +35,6 @@ export default function ChatBot() {
   const [inputValue, setInputValue] = useState("");
   const [pageLoading, setPageLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
-  const router = useRouter();
   const searchParams = useSearchParams();
   const reference = searchParams.get("reference");
 
@@ -87,8 +86,8 @@ export default function ChatBot() {
       });
     } finally {
       setTimeout(() => {
+        window.history.replaceState(null, "", "/");
         setPageLoading(false);
-        router.replace("/");
       }, 3500);
     }
   };
